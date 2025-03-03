@@ -14,7 +14,6 @@ MyClient::MyClient(const QString& host, int port, QWidget* pwgt)
     connect(m_pTcpSocket, &QTcpSocket::readyRead, this, &MyClient::slotReadyRead);
     connect(m_pTcpSocket, &QTcpSocket::errorOccurred, this, &MyClient::slotError);
 
-    // Инициализация photoLabel один раз
     photoLabel = new QLabel(this);
     QPixmap pixmap("D:/4 курс/KB_SH_ZH/cyrsach/program/NDIL.png");
     photoLabel->setPixmap(pixmap.scaled(200, 200, Qt::KeepAspectRatio));
@@ -70,9 +69,8 @@ QWidget* MyClient::createAccountTab() {
             return;
         }
 
-        // Исправленный вывод в лог
         qDebug() << "Form data:"
-                 << "Nickname:" << login // Исправлено m_ptxtNickname->text()
+                 << "Nickname:" << login 
                  << "Firstname:" << firstname
                  << "Lastname:" << lastname
                  << "Email:" << email
@@ -106,8 +104,7 @@ QWidget* MyClient::authTab() {
     m_ptxtAuthPassword = new QLineEdit(tab);
     m_ptxtAuthOTP = new QLineEdit(tab);
 
-    m_ptxtAuthPassword->setEchoMode(QLineEdit::Password); // Исправлено с m_ptxtPassword
-
+    m_ptxtAuthPassword->setEchoMode(QLineEdit::Password); 
     m_ptxtAuthNickname->setPlaceholderText("Login");
     m_ptxtAuthPassword->setPlaceholderText("Password");
     m_ptxtAuthOTP->setPlaceholderText("OTP");
@@ -140,7 +137,7 @@ QWidget* MyClient::authTab() {
             return;
         }
 
-        sendRequest("VERIFY_OTP", {nickname, otp}); // Добавлен nickname
+        sendRequest("VERIFY_OTP", {nickname, otp}); 
     });
 
     QVBoxLayout* layout = new QVBoxLayout(tab);
@@ -197,7 +194,6 @@ void MyClient::slotReadyRead() {
 
     for (;;) {
         if (m_nNextBlockSize == 0) {
-            // Исправлено сравнение типов
             if (m_pTcpSocket->bytesAvailable() < static_cast<qint64>(sizeof(quint16)))
                 break;
             in >> m_nNextBlockSize;
